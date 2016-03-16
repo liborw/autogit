@@ -7,7 +7,7 @@ Usage:
 
 Options:
     -h, --help
-    -p NUM, --period NUM
+    -p NUM, --period NUM        [default: 30]
     -d, --debug
 """
 
@@ -54,7 +54,11 @@ def main():
 
 
 def process_repo(repo):
-    # commit if something
+
+    if repo.is_dirty():
+        repo.git.add(all=True)
+        repo.git.commit(m="Autogit")
+
     # fetch
     # merge rebase
     # push
