@@ -81,6 +81,7 @@ def process_repo(repo):
 
         commits_behind = repo.iter_commits('master..origin/master')
         commits_ahead = repo.iter_commits('origin/master..master')
+        log.info("Commits ahead: %d behind: %d", commits_ahead, commits_behind)
 
         if commits_behind > 0:
             if commits_ahead > 0:
