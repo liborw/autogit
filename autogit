@@ -59,6 +59,7 @@ def process_repo(repo):
     if repo.is_dirty():
         repo.git.add(all=True)
         repo.git.commit(m="Autogit")
+        log.info("Commited local changes in repo %s", repo.path)
 
     # fetch
     # merge rebase
