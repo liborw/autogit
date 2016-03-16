@@ -44,7 +44,8 @@ def main():
         log.info('Found %d repos', len(repos))
 
     # main loop
-    while True:
+    running = True
+    while running:
         for repo in repos:
             try:
                 process_repo(repo)
@@ -82,8 +83,7 @@ def is_repo(path):
 
 
 def setup_logging(opt):
-    pass
-
+    log.basicConfig(level='DEBUG' if opt['--debug'] else 'INFO')
 
 if __name__ == '__main__':
     main()
