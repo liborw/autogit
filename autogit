@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+
+"""Automatic GIT
+
+Usage:
+    autogit [options] <path>
+
+Options:
+    -h, --help
+    -p NUM, --period NUM
+    -d, --debug
+"""
+
+from docopt import docopt
+import git
+import logging as log
+import os.path
+import sys
+import time
+
+DEFAUT_PATH = '~/.autogit'
+
+def main():
+    opt = docopt(__doc__)
+    setup_logging(opt)
+
+    # log command line arguments
+    log.debug("Args: \n%s", str(opt))
+
+    if opt['<path>']:
+        path = opt['<path>']
+    else:
+        path = DEFAUT_PATH
+
+    period = int(opt['--period'])
+
+    # find all git repositories under the path
+    repos = find_repos(path)
+
+    if len(repos) <= 0:
+        log.warn('No repo found')
+        sys.exit(1)
+    else:
+        log.info('Found %d repos', len(repos))
+
+    # main loop
+    while True:
+        for repo in repos:
+            try:
+                process_repo(repo)
+            except Exception as e:
+                log.error("%s", str(e))
+            time.sleep(period)
+
+
+def process_repo(repo):
+    # commit if something
+    # fetch
+    # merge rebase
+    # push
+
+
+def find_repos(path):
+    repos = []
+    if is_repo(path):
+        log.debug("Found repo: %s", path)
+        repos.append(git.Repo(path))
+    else:
+        for p in os.listdir(path):
+            if os.path.isdir(p) and is_repo(p):
+                log.debug("Found repo: %s", path)
+                repos.append(git.Repo(p))
+    return repos
+
+
+def is_repo(path):
+    return os.path.exists(os.path.join(path, '.git'))
+
+
+def setup_logging(opt):
+    pass
+
+
+if __name__ == '__main__':
+    main()
