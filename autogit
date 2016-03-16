@@ -7,7 +7,7 @@ Usage:
 
 Options:
     -h, --help
-    -p NUM, --period NUM        [default: 30]
+    -p NUM, --period NUM        [default: 1]
     -d, --debug
 """
 
@@ -19,6 +19,16 @@ import sys
 import time
 
 DEFAUT_PATH = '~/.autogit'
+
+
+class Autogit(object):
+
+    def __init__(self, path):
+        self.path = path
+
+    def process_repo(self, repo):
+        pass
+
 
 def main():
     opt = docopt(__doc__)
@@ -51,15 +61,36 @@ def main():
                 process_repo(repo)
             except Exception as e:
                 log.error("%s", str(e))
-            time.sleep(period)
+            time.sleep(period*60)
 
+# http://stackoverflow.com/questions/15849640/how-to-get-count-of-unpublished-commit-with-gitpython/15862203#15862203
+# http://masnun.com/2012/01/22/fetching-remote-git-repo-with-python-in-a-few-lines-of-codes.html
 
 def process_repo(repo):
+    log.info("Precessing %s", repo.working_dir)
 
+    # check local chages
     if repo.is_dirty():
         repo.git.add(all=True)
         repo.git.commit(m="Autogit")
-        log.info("Commited local changes in repo %s", repo.path)
+        log.info(" - Commited local changes")
+
+    if repo.remotes:
+        remote = repo.remote()
+        remote.fetch()
+
+        commits_behind = repo.iter_commits('master..origin/master')
+        commits_ahead = repo.iter_commits('origin/master..master')
+
+        if commits_behind > 0:
+            if commits_ahead > 0:
+                # rebase
+                log.warn("Rebase not implemented yet")
+            else:
+                remote.pull()
+
+        if commits_ahead > 0:
+            remote.push()
 
     # fetch
     # merge rebase
