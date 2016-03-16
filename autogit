@@ -81,7 +81,7 @@ def process_repo(repo):
 
         commits_behind = len(list(repo.iter_commits('master..origin/master')))
         commits_ahead = len(list(repo.iter_commits('origin/master..master')))
-        log.info("Commits ahead: %d behind: %d", commits_ahead, commits_behind)
+        log.info(" - Commits ahead: %d behind: %d", commits_ahead, commits_behind)
 
         if commits_behind > 0:
             if commits_ahead > 0:
@@ -92,6 +92,7 @@ def process_repo(repo):
 
         if commits_ahead > 0:
             remote.push()
+            log.info(" - Push")
 
     # fetch
     # merge rebase
