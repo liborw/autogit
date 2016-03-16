@@ -95,10 +95,6 @@ def process_repo(repo):
             log.info(" - Push")
             remote.push()
 
-    # fetch
-    # merge rebase
-    # push
-
 
 def find_repos(path):
     repos = []
