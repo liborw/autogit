@@ -88,11 +88,12 @@ def process_repo(repo):
                 # rebase
                 log.warn("Rebase not implemented yet")
             else:
+                log.info(" - Pull")
                 remote.pull()
 
         if commits_ahead > 0:
-            remote.push()
             log.info(" - Push")
+            remote.push()
 
     # fetch
     # merge rebase
